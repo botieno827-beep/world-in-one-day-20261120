@@ -24,15 +24,15 @@ const cardBadges = [
   ['CYCLONE AKVAN', 'Weather office · IMD', 'Akvan makes landfall in Odisha'],
   ['AI SELL-OFF', 'Friday closes · IMF', 'Asian stocks sink on AI fears'],
   ['COP31: NO DEAL', 'Antalya · AP'],
-  ['UK–EU DEAL', 'Agreement · EU Council'],
+  ['UK–EU DEAL', 'Agreement · EU Council', 'UK–EU trade and youth deal'],
   ['POLAND: MISSILES', 'Incursion · AP'],
-  ['IRAQ: ARMY IN', 'Deployment · Reuters'],
-  ['ITALY: STRIKE', 'La Repubblica'],
-  ['NVIDIA: SEC PROBE', 'Sources’ account · Reuters'],
-  ['SEOUL: IMPEACH BID', 'Party policy · SBS'],
-  ['KENYA: OIL', 'Production drilling · The Star'],
-  ['JAPAN: +2.3%', 'Headline CPI · MIC'],
-  ['PHILLIPS: 118', 'Day 2 · AP'],
+  ['IRAQ: ARMY IN', 'Deployment · Reuters', 'Iraqi troops enter militia town'],
+  ['ITALY: STRIKE', 'La Repubblica', 'Italy’s workers and students strike'],
+  ['NVIDIA: SEC PROBE', 'Sources’ account · Reuters', 'Nvidia faces SEC accounting probe'],
+  ['SEOUL: IMPEACH BID', 'Party policy · SBS', 'Seoul party targets chief justice'],
+  ['KENYA: OIL', 'Production drilling · The Star', 'Kenya starts production drilling'],
+  ['JAPAN: +2.3%', 'Headline CPI · MIC', 'Japan’s October inflation: 2.3%'],
+  ['PHILLIPS: 118', 'Day 2 · AP', 'Phillips hits 118 against India'],
 ];
 function cleanCardArt(story) {
   // Keep the market data and restore the climate sign; HTML owns other labels.
@@ -154,6 +154,7 @@ main{padding:14px 32px;gap:6px;grid-template-rows:196px 76px 28px 34px 330px 472
 .art-fact{position:absolute;left:8px;top:65px;padding:4px 8px;background:#fffaf0;color:#111827;font-size:24px;line-height:28px;font-weight:900;white-space:nowrap}.art-fact.landfall{left:auto;right:8px;top:auto;bottom:34px;font-size:22px;line-height:26px}
 .copy{padding:8px 12px}.meta,.small .meta{font-size:12px;line-height:14px;letter-spacing:.15px;flex:none}.verified,.small .verified{font-size:9px;line-height:11px;padding:1px 3px;letter-spacing:0}.hero h2{font-size:34px;line-height:36px;margin:4px 0}.hero p{font-size:18px;line-height:21px}.small h2{font-size:23px;line-height:24px;margin:4px 0}.small p{font-size:16px;line-height:18.5px}.small-cards{grid-template-rows:230px 230px}.small .copy{padding:6px 9px}
 .bottom{padding-top:7px}.map{height:269px;margin-top:4px}.map-note{font-size:10px;line-height:12px;margin-top:3px}.briefs{margin-top:4px;grid-template-rows:repeat(11,25.5px)}.brief{height:25.5px;gap:6px}.brief-number{width:23px;font-size:16px;line-height:23px}.brief-line{font-size:15.8px;line-height:23px;font-weight:400;letter-spacing:-.2px;position:relative;top:1.5px}.brief-line strong{font-weight:800}.brief-cite{font-size:11.5px;font-weight:400}.date-check{padding:3px 12px}.date-check h4{margin:0 0 1px}.date-check .heading small{margin-top:1px}
+${readFileSync(new URL('./edition.css',import.meta.url),'utf8')}
 </style><main>
 <header data-cell="header"><div class="topbar" data-audit><span>THE WORLD IN ONE DAY</span><span>35 STORIES • 7 REGIONS • EVERY ONE DATED FRIDAY 20 NOVEMBER 2026</span></div><div class="masthead"><h1 data-audit>Friday 20 November 2026</h1></div><p class="deck" data-audit>Bridges under fire. A cyclone makes landfall. AI markets tumble. A world negotiating what comes next.</p></header>
 <section class="kpis">${kpis.map(([value,label,source],i)=>`<div class="kpi" data-cell="kpi-${i}"><strong data-audit>${value}</strong><p data-audit>${label}</p><small data-audit>${source}</small></div>`).join('')}</section>
