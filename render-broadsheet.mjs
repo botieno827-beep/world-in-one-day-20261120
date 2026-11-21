@@ -9,7 +9,9 @@ const here = fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
 const playwrightPath = require.resolve('playwright-core', { paths: [here, resolve(here,'..','tools')] });
 const { chromium } = require(playwrightPath);
-execFileSync(process.execPath,[resolve(here,'build-broadsheet.mjs')],{cwd:here,stdio:'inherit'});
+const design=JSON.parse(readFileSync(resolve(here,'design-config.json'),'utf8'));
+const builder=design.edition==='regional-focus'?'build-regional.mjs':'build-broadsheet.mjs';
+execFileSync(process.execPath,[resolve(here,builder)],{cwd:here,stdio:'inherit'});
 const executablePath = process.env.CHROMIUM_EXECUTABLE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const browser = await chromium.launch({executablePath,headless:true});
 try {

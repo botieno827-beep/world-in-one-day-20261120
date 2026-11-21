@@ -1,6 +1,6 @@
 # The World in One Day — Friday 20 November 2026
 
-An original 35-story broadsheet across seven regions: 13 illustrated cards and 22 typography-led briefs. The illustrated cards have bold headline banners, source captions and a confirmed-report or attributed-claim label. Every story retains its source and date basis in the source ledger. The opening 13 cards are located on a numbered Natural Earth world map.
+An original world-news image built from a 35-story verified research ledger across seven regions. The design configuration selects either the detailed broadsheet or a more selective regional layout. The regional design presents 13 selected headlines in seven larger illustrated panels to improve thumbnail readability. Every selected event retains its source and date basis in the full ledger.
 
 ![The World in One Day](front-page.png)
 
