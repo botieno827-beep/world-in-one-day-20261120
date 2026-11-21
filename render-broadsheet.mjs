@@ -16,7 +16,7 @@ try {
   const page = await browser.newPage({viewport:{width:1600,height:1600},deviceScaleFactor:1});
   await page.goto(pathToFileURL(resolve(here,'front-page.html')).href,{waitUntil:'load'});
   await page.evaluate(()=>document.fonts.ready);
-  const audit = await page.evaluate(()=>{
+  const inspectLayout = ({edge})=>{
     const serialize = r=>({left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height});
     const elements=[...document.querySelectorAll('[data-audit], svg text')];
     const blocks=elements.map(el=>{
@@ -30,7 +30,7 @@ try {
       if(b.el.scrollWidth>b.el.clientWidth+1)failures.push({kind:'horizontal-overflow',text:b.text,width:b.el.clientWidth,scroll:b.el.scrollWidth});
       for(const r of b.rects){
         if(r.left<b.frame.left-.7||r.right>b.frame.right+.7||r.top<b.frame.top-.7||r.bottom>b.frame.bottom+.7)failures.push({kind:'outside-container',text:b.text,rect:serialize(r),frame:serialize(b.frame)});
-        if(r.left<0||r.top<0||r.right>1600.7||r.bottom>1600.7)failures.push({kind:'outside-page',text:b.text});
+        if(r.left<0||r.top<0||r.right>edge+.7||r.bottom>edge+.7)failures.push({kind:'outside-page',text:b.text});
       }
     }
     // Only compare independent blocks; child glyph rectangles from one block are not collisions.
@@ -41,8 +41,10 @@ try {
         if(Math.min(ar.right,br.right)-Math.max(ar.left,br.left)>1&&Math.min(ar.bottom,br.bottom)-Math.max(ar.top,br.top)>1){failures.push({kind:'text-collision',a:a.text,b:b.text});break;}
       }
     }
-    return {checkedTextBlocks:blocks.length,failures,cardCount:document.querySelectorAll('.card').length,briefCount:document.querySelectorAll('.brief').length,svgCount:document.querySelectorAll('svg').length,page:{width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight},smallestBodyText:13.3};
-  });
+    const minimumBodyText=Math.min(...[...document.querySelectorAll('.card p,.brief-line')].map(el=>parseFloat(getComputedStyle(el).fontSize)));
+    return {checkedTextBlocks:blocks.length,failures,cardCount:document.querySelectorAll('.card').length,briefCount:document.querySelectorAll('.brief').length,bannerCount:document.querySelectorAll('.art-banner').length,captionCount:document.querySelectorAll('.art-caption').length,briefIconCount:document.querySelectorAll('.brief svg').length,svgCount:document.querySelectorAll('svg').length,page:{width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight},minimumBodyText};
+  };
+  const audit = await page.evaluate(inspectLayout,{edge:1600});
   writeFileSync(resolve(here,'layout-audit.json'),JSON.stringify(audit)+'\n');
   if(audit.failures.length||audit.page.height!==1600||audit.page.width!==1600){
     await page.screenshot({path:resolve(here,'..','layout-debug.png'),clip:{x:0,y:0,width:1600,height:1600}});
@@ -50,9 +52,25 @@ try {
     throw new Error(JSON.stringify(audit));
   }
   await page.screenshot({path:resolve(here,'front-page.png'),clip:{x:0,y:0,width:1600,height:1600},animations:'disabled'});
-  await page.evaluate(()=>{document.body.style.transform='scale(0.64)';document.body.style.transformOrigin='top left';document.documentElement.style.width='1024px';document.documentElement.style.height='1024px';});
-  await page.setViewportSize({width:1024,height:1024});
-  await page.screenshot({path:resolve(here,'submission.png'),clip:{x:0,y:0,width:1024,height:1024},animations:'disabled'});
+  // Render genuine 1024px CSS, with 2 device pixels per CSS pixel, then downsample once.
+  const thumbnailContext=await browser.newContext({viewport:{width:1024,height:1024},deviceScaleFactor:2});
+  const thumbnail=await thumbnailContext.newPage();
+  await thumbnail.goto(pathToFileURL(resolve(here,'front-page.html')).href,{waitUntil:'load'});
+  await thumbnail.evaluate(()=>{
+    const style=document.querySelector('style');
+    style.textContent=style.textContent.replace(/(-?\d*\.?\d+)px\b/g,(_,value)=>`${Number(value)*.64}px`);
+    document.querySelector('meta[name="viewport"]').content='width=1024';
+  });
+  await thumbnail.evaluate(()=>document.fonts.ready);
+  const thumbnailAudit=await thumbnail.evaluate(inspectLayout,{edge:1024});
+  if(thumbnailAudit.failures.length||thumbnailAudit.page.height!==1024||thumbnailAudit.page.width!==1024){
+    await thumbnail.screenshot({path:resolve(here,'..','thumbnail-debug.png')});
+    throw new Error(JSON.stringify({thumbnailAudit}));
+  }
+  const supersampled=resolve(here,'..','render-2048.png');
+  await thumbnail.screenshot({path:supersampled,clip:{x:0,y:0,width:1024,height:1024},animations:'disabled',scale:'device'});
+  execFileSync('python',['-c','from PIL import Image; import sys; im=Image.open(sys.argv[1]).convert("RGB"); im.resize((1024,1024),Image.Resampling.LANCZOS).save(sys.argv[2],format="PNG",optimize=True)',supersampled,resolve(here,'submission.png')]);
+  await thumbnailContext.close();
   const bytes=readFileSync(resolve(here,'submission.png'));
   if(bytes.readUInt32BE(16)!==1024||bytes.readUInt32BE(20)!==1024||bytes.length>1048576)throw new Error('Submission image violates the bounty limits.');
   const results=[];
@@ -63,7 +81,7 @@ try {
   }
   const expected=createHash('sha256').update(bytes).digest('hex');
   if(results.some(hash=>hash!==expected))throw new Error('Repeated runs differ from the checked submission image.');
-  const result={...audit,master:'1600 × 1600',submission:'1024 × 1024',submissionBytes:bytes.length,sha256:expected,deterministic:true};
+  const result={...audit,thumbnailAudit,rendering:'Native 1024px CSS, deviceScaleFactor 2, Lanczos downsample',master:'1600 × 1600',submission:'1024 × 1024',submissionBytes:bytes.length,sha256:expected,deterministic:true};
   writeFileSync(resolve(here,'layout-audit.json'),JSON.stringify(result)+'\n');
   console.log(JSON.stringify(result,null,2));
 } finally { await browser.close(); }

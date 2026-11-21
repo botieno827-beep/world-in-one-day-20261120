@@ -18,14 +18,62 @@ if (Object.values(counts).some(v => !v)) throw new Error('Every region must be r
 function metadata(story, compact = false) {
   return `<div class="meta" data-audit><span class="region" style="color:${colors[story.region]}">${escape(story.region)}</span><span class="verified ${story.status.toLowerCase()}">${story.status}</span></div>${compact?'':`<div class="place" data-audit>${escape(story.place)}</div>`}`;
 }
+const cardBadges = [
+  ['KYIV: 3 BRIDGES HIT', 'Official count · Reuters', 'Kyiv’s three bridges hit'],
+  ['CYCLONE AKVAN', 'Weather office · IMD', 'Akvan makes landfall in Odisha'],
+  ['AI SELL-OFF', 'Friday closes · IMF', 'Asian stocks sink on AI fears'],
+  ['COP31: NO DEAL', 'Antalya · AP'],
+  ['UK–EU DEAL', 'Agreement · EU Council'],
+  ['POLAND: MISSILES', 'Incursion · AP'],
+  ['IRAQ: ARMY IN', 'Deployment · Reuters'],
+  ['ITALY: STRIKE', 'La Repubblica'],
+  ['NVIDIA: SEC PROBE', 'Sources’ account · Reuters'],
+  ['SEOUL: IMPEACH BID', 'Party policy · SBS'],
+  ['KENYA: OIL', 'Production drilling · The Star'],
+  ['JAPAN: +2.3%', 'Headline CPI · MIC'],
+  ['PHILLIPS: 118', 'Day 2 · AP'],
+];
+function cleanCardArt(story) {
+  // Keep only the market legend; new HTML badges own all other labels.
+  return artwork(story.art).replace(/<text\b[^>]*>[\s\S]*?<\/text>/g, match => {
+    if (story.id === 3) return match;
+    return '';
+  });
+}
 function card(story, hero = false) {
+  const [banner,caption,headline] = cardBadges[story.id-1];
   return `<article class="card ${hero?'hero':'small'}" data-cell="card-${story.id}" style="--accent:${colors[story.region]}">
-    <div class="art">${artwork(story.art)}<span class="number" data-audit>${story.id.toString().padStart(2,'0')}</span></div>
-    <div class="copy">${metadata(story)}<h2 data-audit>${escape(story.title)}</h2><p data-audit>${escape(story.detail)}</p><div class="source" data-audit>20 NOV · ${escape(story.source)}</div></div>
+    <div class="art">${cleanCardArt(story)}<span class="number" data-audit>${story.id.toString().padStart(2,'0')}</span><strong class="art-banner" data-audit>${escape(banner)}</strong><span class="art-caption" data-audit>${escape(caption)}</span></div>
+    <div class="copy">${metadata(story)}<h2 data-audit>${escape(headline||story.title)}</h2><p data-audit>${escape(story.detail)}</p><div class="source" data-audit>20 NOV · ${escape(story.source)}</div></div>
   </article>`;
 }
+const briefDisplay = [
+  ['IRAN', 'Trump sees no acceptable deal', 'AP'],
+  ['SAUDI / YEMEN', 'Forces exchange fire', 'AP'],
+  ['GAZA', 'Six killed, local officials say', 'AP'],
+  ['SUDAN', 'RSF claims five Blue Nile gains', 'S. Tribune'],
+  ['S. AFRICA', 'Quarterly murders: 5,590', 'D. Maverick'],
+  ['BENIN', 'Seeks return of 35 looted objects', 'Africanews'],
+  ['SOMALIA', 'Rally backs UAE envoy’s expulsion', 'Africanews'],
+  ['BERLIN', 'Students march against rearmament', 'Africanews'],
+  ['RUSSIA', 'Rejects NATO-like Ukraine status', 'AP'],
+  ['UK', 'Dinghy vandal jailed for 15 months', 'AP'],
+  ['IOWA', 'DOJ asserts emergency blast powers', 'DOJ'],
+  ['CANADA', 'Halifax security forum opens', 'HFX'],
+  ['BRAZIL', 'Black Consciousness Day observed', 'B3'],
+  ['CHILE', 'Fed’s Cook calls for rate hikes', 'Fed'],
+  ['AUSTRALIA', 'Albanese meets Xi on trade', 'ABC'],
+  ['AUSTRALIA', '1,689 David Jones job notices', 'NewsWire'],
+  ['NZ', 'Jackson seeks US envoy’s expulsion', 'NZ Herald'],
+  ['NEPAL', 'Cricket for children’s rights', 'UNICEF'],
+  ['GAZA', '€10m child-services plan launched', 'UNICEF'],
+  ['GLOBAL', '20+ exchanges ring for children', 'UNICEF'],
+  ['DR CONGO', 'WHO reports sustained Ebola', 'WHO'],
+  ['UKRAINE', 'UNICEF warns on child casualties', 'UNICEF'],
+];
 function brief(story) {
-  return `<article class="brief" data-cell="brief-${story.id}"><span class="brief-number">${story.id}</span><div class="micro">${artwork(story.art)}</div><div class="brief-copy"><h3 data-audit>${escape(story.title)}</h3><div class="brief-source" data-audit><span style="color:${colors[story.region]}">${escape(story.region)}</span> · ${escape(story.source)} <b class="${story.status.toLowerCase()}">${story.status==='CONFIRMED'?'✓':'CLAIM'}</b></div></div></article>`;
+  const [place,headline,source] = briefDisplay[story.id-14];
+  return `<article class="brief" data-cell="brief-${story.id}"><span class="brief-number" data-audit>${story.id}</span><p class="brief-line" data-audit><strong>${escape(place)}:</strong> ${escape(headline)} <span class="brief-cite">(${escape(source)})</span></p></article>`;
 }
 
 function worldMap(){
@@ -52,9 +100,9 @@ function worldMap(){
   let closest=Infinity;
   for(let i=0;i<pins.length;i++)for(let j=i+1;j<pins.length;j++)closest=Math.min(closest,Math.hypot(pins[i].lx-pins[j].lx,pins[i].ly-pins[j].ly));
   if(closest<27.5)throw new Error('Map labels collide.');
-  const leaders = pins.map(p=>`<path d="M${p.x.toFixed(1)},${p.y.toFixed(1)}L${p.lx.toFixed(1)},${p.ly.toFixed(1)}" stroke="#9b4b3c" stroke-width=".9"/><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2" fill="#9f3d32"/>`).join('');
-  const labels=pins.map(p=>`<g><circle cx="${p.lx.toFixed(1)}" cy="${p.ly.toFixed(1)}" r="12.5" fill="#a73d31" stroke="#f6f1e7" stroke-width="2"/><text x="${p.lx.toFixed(1)}" y="${(p.ly+4).toFixed(1)}" text-anchor="middle" fill="#fff7e9" font-family="Arial" font-weight="700" font-size="12">${p.id}</text></g>`).join('');
-  return `<svg viewBox="0 0 590 240" xmlns="http://www.w3.org/2000/svg" aria-label="Geographically anchored world map showing the first thirteen stories"><rect width="590" height="240" fill="#e6ebdf"/><g fill="none" stroke="#cad4c8" stroke-width=".8"><path d="M18 105H570M18 37H570M18 173H570M155 9V227M294 9V227M432 9V227"/></g><g fill="#b2bba5" stroke="#899881" stroke-width=".35">${shapes}</g>${leaders}${labels}</svg>`;
+  const leaders = pins.map(p=>`<path d="M${p.x.toFixed(1)},${p.y.toFixed(1)}L${p.lx.toFixed(1)},${p.ly.toFixed(1)}" stroke="#7f1d1d" stroke-width="1.2"/><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2" fill="#b91c1c"/>`).join('');
+  const labels=pins.map(p=>`<g><circle cx="${p.lx.toFixed(1)}" cy="${p.ly.toFixed(1)}" r="12.5" fill="#b91c1c" stroke="#111827" stroke-width="1.5"/><text x="${p.lx.toFixed(1)}" y="${(p.ly+4.5).toFixed(1)}" text-anchor="middle" fill="#ffffff" font-family="Arial" font-weight="800" font-size="13">${p.id}</text></g>`).join('');
+  return `<svg viewBox="0 0 590 240" xmlns="http://www.w3.org/2000/svg" aria-label="Geographically anchored world map showing the first thirteen stories"><rect width="590" height="240" fill="#dbeafe"/><g fill="none" stroke="#b6c9dd" stroke-width=".8"><path d="M18 105H570M18 37H570M18 173H570M155 9V227M294 9V227M432 9V227"/></g><g fill="#a6baa2" stroke="#52705c" stroke-width=".6">${shapes}</g>${leaders}${labels}</svg>`;
 }
 
 const kpis = [
@@ -71,6 +119,9 @@ const html=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="vie
 .topbar{height:24px}.masthead{height:82px}h1{font-size:72px;line-height:82px;letter-spacing:-3px}.deck{font-size:20px;line-height:23px}.timeline-title{font-size:18px;line-height:23px}.timeline-title small{display:block;font-size:9px;line-height:12px}.hero .art{height:137px}.hero h2{font-size:28px;line-height:29px}.small .art{height:60px}.small h2{font-size:20px;line-height:21px}.small p{font-size:13px;line-height:15px}.date-check .heading{font-size:24px;line-height:28px}.date-check .heading small{display:block;font-size:8px;line-height:11px;margin-top:3px}
 .timeline-title{font-size:16px;white-space:nowrap;letter-spacing:-.3px;line-height:20px}.timeline-title small{font-size:8.5px;letter-spacing:.2px}.date-check .heading{font-size:20px;line-height:24px;white-space:nowrap}.date-check .heading small{font-size:7.5px;line-height:10px;letter-spacing:.1px;white-space:normal}.art{background:#e7dfce}.art svg{overflow:hidden}
 .art{padding-left:44px}.small .art{padding-left:36px}.small .number{width:25px;height:22px;line-height:22px;top:7px;left:5px;font-size:13px}.micro svg{overflow:hidden}
+/* Edition 3: legibility at the 1024-pixel judging size. */
+html,body{color:#111827}main{grid-template-rows:144px 76px 28px 52px 288px 428px 382px 64px 14px}.masthead{height:90px}h1{font-size:78px;line-height:90px;font-weight:900;color:#0b0f19}.deck,.kpi small,.region-note,.place,.source,.map-note,.timeline-title small,.date-check .heading small{color:#111827}.card{border-color:#758275;background:#fffcf4}.card .art{background:#e6dbc3}.card .art>svg{filter:saturate(1.42) contrast(1.14)}.card:nth-child(2n) .art-banner{background:#0f172a}.art-banner{position:absolute;top:7px;left:52px;max-width:calc(100% - 60px);padding:5px 9px;background:#b91c1c;border-radius:3px;color:#fff;font-size:22px;line-height:25px;font-weight:900;letter-spacing:.15px;white-space:nowrap}.art-caption{position:absolute;bottom:6px;left:52px;padding:3px 7px;background:#0f172a;color:#fff;border-radius:3px;font-size:12px;line-height:14px;font-weight:700;white-space:nowrap}.small-cards{grid-template-rows:208px 208px}.small .art{height:72px}.small .art-banner{left:42px;top:5px;max-width:calc(100% - 49px);font-size:16px;line-height:19px;padding:3px 6px}.small .art-caption{left:42px;bottom:4px;font-size:10.5px;line-height:12px;padding:2px 5px}.small .place{display:none}.small p{font-size:14px;line-height:16px;color:#111827}.hero p{font-size:16px;line-height:19px;color:#111827}.source{font-weight:800}.small .source{font-size:9px;line-height:11px}.number{color:#0f172a;border-bottom-color:#b91c1c;background:#fffaf0}.briefs{grid-template-rows:repeat(11,31px);gap:0 15px}.brief{height:31px;gap:7px;border-bottom-color:#adb6aa}.brief-number{font-size:17px;line-height:23px;color:#991b1b;width:21px;font-weight:900}.brief-line{font-family:Arial,sans-serif;font-size:15.1px;line-height:24px;font-weight:550;letter-spacing:-.15px;white-space:nowrap;color:#111827}.brief-line strong{font-weight:900;color:#0b0f19}.brief-cite{font-size:12px;font-weight:700;color:#111827}.map-key{font-size:12px;line-height:15px}.map-key b{color:#991b1b}.date-check{padding-top:5px;padding-bottom:5px}.date-check p{color:#111827}footer{color:#111827}
+.brief-number{width:27px}
 </style><main>
 <header data-cell="header"><div class="topbar" data-audit><span>THE WORLD IN ONE DAY</span><span>35 STORIES • 7 REGIONS • EVERY ONE DATED FRIDAY 20 NOVEMBER 2026</span></div><div class="masthead"><h1 data-audit>Friday 20 November 2026</h1><div class="edition-box" data-audit>GLOBAL EDITION<br>VOL. XXVI · NO. 324</div></div><p class="deck" data-audit>Bridges under fire. A cyclone makes landfall. AI markets tumble. A world negotiating what comes next.</p></header>
 <section class="kpis">${kpis.map(([value,label,source],i)=>`<div class="kpi" data-cell="kpi-${i}"><strong data-audit>${value}</strong><p data-audit>${label}</p><small data-audit>${source}</small></div>`).join('')}</section>
@@ -85,4 +136,4 @@ const html=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="vie
 writeFileSync(resolve(directory,'front-page.html'), html, 'utf8');
 const audit = { edition:'2026-11-20',policy:datePolicy,storyCount:stories.length,regions:counts,stories,additionalEvidence,timeline,exclusions };
 writeFileSync(resolve(directory,'date-audit.json'),JSON.stringify(audit)+'\n');
-console.log(JSON.stringify({generated:'front-page.html',stories:stories.length,regions:counts,illustrations:35}));
+console.log(JSON.stringify({generated:'front-page.html',stories:stories.length,regions:counts,illustrations:13,typographicBriefs:22}));

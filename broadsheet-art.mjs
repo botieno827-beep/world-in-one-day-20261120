@@ -1,14 +1,14 @@
 // Original deterministic SVG illustrations. These are editorial schematics, not photographs.
 const paper = '#f6f1e7';
-const ink = '#18242d';
-const red = '#ac352e';
-const gold = '#dfaa54';
+const ink = '#0f172a';
+const red = '#b91c1c';
+const gold = '#f2ae32';
 const svg = (body, background = '#e7dfce') => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180" preserveAspectRatio="none" role="img" aria-label="Editorial illustration"><rect width="480" height="180" fill="${background}"/>${body}</svg>`;
 const path = (d, fill, stroke = 'none', sw = 1, extra = '') => `<path d="${d}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" ${extra}/>`;
 const rect = (x, y, w, h, fill, extra = '') => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" ${extra}/>`;
 const circle = (x, y, r, fill, extra = '') => `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" ${extra}/>`;
 const text = (x, y, t, size = 22, fill = paper, extra = '') => `<text x="${x}" y="${y}" font-family="Arial,sans-serif" font-size="${size}" font-weight="700" fill="${fill}" ${extra}>${t}</text>`;
-const line = (d, color = ink, sw = 3, extra = '') => path(d, 'none', color, sw, extra);
+const line = (d, color = ink, sw = 3, extra = '') => path(d, 'none', color, Math.max(1,sw*1.25), extra);
 const people = (positions, color) => positions.map(([x,y]) => circle(x,y,7,color)+path(`M${x-10} ${y+10}h20l6 36h-32Z`,color)).join('');
 const stars = (cx,cy,r,fill,count=12) => Array.from({length:count},(_,i)=>{
   const a=i*2*Math.PI/count; return text(cx+Math.cos(a)*r,cy+Math.sin(a)*r+4,'★',11,fill,'text-anchor="middle"');
