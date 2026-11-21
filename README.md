@@ -26,6 +26,8 @@ For another Chromium installation, set `CHROMIUM_EXECUTABLE` to its absolute exe
 
 `build-broadsheet.mjs` creates the HTML from `news-data.mjs` and the original SVG scenes in `broadsheet-art.mjs`. `render-broadsheet.mjs` creates both PNGs and the machine-readable layout report. Only rendering uses Playwright and Pillow; the judged entrypoint uses the Node standard library alone.
 
+`design-config.json` selects the current readability treatment in `readability-editions.mjs`. The shortened display copy retains the original facts, including claim attribution and future rollout qualifications; the complete source record remains in `news-data.mjs`.
+
 ## Date and source policy
 
 `news-data.mjs` links a named reporting source for every story and records whether the date belongs to the event, a data release or a first report. `date-audit.json` contains the full source ledger, additional evidence, timeline basis and exclusions. Local event dates govern the edition. October inflation and quarterly crime figures are identified as data released on Friday rather than events measured on that day.

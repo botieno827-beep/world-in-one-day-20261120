@@ -3,8 +3,12 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { stories, timeline, exclusions, datePolicy, additionalEvidence } from './news-data.mjs';
 import { artwork } from './broadsheet-art.mjs';
+import { editions, shortFacts } from './readability-editions.mjs';
 
 const directory = fileURLToPath(new URL('.', import.meta.url));
+const design = JSON.parse(readFileSync(new URL('./design-config.json',import.meta.url),'utf8'));
+const edition = editions[design.edition];
+if(!edition)throw new Error(`Unknown design edition: ${design.edition}`);
 const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 const colors = { EUROPE: '#355d82', ASIA: '#a24636', 'MIDDLE EAST': '#91622f', AFRICA: '#497660', AMERICAS: '#855078', OCEANIA: '#317e8a', GLOBAL: '#626247' };
 const expected = Array.from({length:35}, (_,i) => i+1);
@@ -44,7 +48,7 @@ function card(story, hero = false) {
   const [banner,caption,headline] = cardBadges[story.id-1];
   return `<article class="card ${hero?'hero':'small'}" data-cell="card-${story.id}" style="--accent:${colors[story.region]}">
     <div class="art">${cleanCardArt(story)}<span class="number" data-audit>${story.id.toString().padStart(2,'0')}</span><strong class="art-banner" data-audit>${escape(banner)}</strong><span class="art-caption" data-audit>${escape(caption)}</span></div>
-    <div class="copy">${metadata(story)}<h2 data-audit>${escape(headline||story.title)}</h2><p data-audit>${escape(story.detail)}</p><div class="source" data-audit>20 NOV · ${escape(story.source)}</div></div>
+    <div class="copy">${metadata(story)}<h2 data-audit>${escape(headline||story.title)}</h2><p data-audit>${escape(shortFacts[story.id-1]||story.detail)}</p><div class="source" data-audit>20 NOV · ${escape(story.source)}</div></div>
   </article>`;
 }
 const briefDisplay = [
@@ -122,6 +126,7 @@ const html=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="vie
 /* Edition 3: legibility at the 1024-pixel judging size. */
 html,body{color:#111827}main{grid-template-rows:144px 76px 28px 52px 288px 428px 382px 64px 14px}.masthead{height:90px}h1{font-size:78px;line-height:90px;font-weight:900;color:#0b0f19}.deck,.kpi small,.region-note,.place,.source,.map-note,.timeline-title small,.date-check .heading small{color:#111827}.card{border-color:#758275;background:#fffcf4}.card .art{background:#e6dbc3}.card .art>svg{filter:saturate(1.42) contrast(1.14)}.card:nth-child(2n) .art-banner{background:#0f172a}.art-banner{position:absolute;top:7px;left:52px;max-width:calc(100% - 60px);padding:5px 9px;background:#b91c1c;border-radius:3px;color:#fff;font-size:22px;line-height:25px;font-weight:900;letter-spacing:.15px;white-space:nowrap}.art-caption{position:absolute;bottom:6px;left:52px;padding:3px 7px;background:#0f172a;color:#fff;border-radius:3px;font-size:12px;line-height:14px;font-weight:700;white-space:nowrap}.small-cards{grid-template-rows:208px 208px}.small .art{height:72px}.small .art-banner{left:42px;top:5px;max-width:calc(100% - 49px);font-size:16px;line-height:19px;padding:3px 6px}.small .art-caption{left:42px;bottom:4px;font-size:10.5px;line-height:12px;padding:2px 5px}.small .place{display:none}.small p{font-size:14px;line-height:16px;color:#111827}.hero p{font-size:16px;line-height:19px;color:#111827}.source{font-weight:800}.small .source{font-size:9px;line-height:11px}.number{color:#0f172a;border-bottom-color:#b91c1c;background:#fffaf0}.briefs{grid-template-rows:repeat(11,31px);gap:0 15px}.brief{height:31px;gap:7px;border-bottom-color:#adb6aa}.brief-number{font-size:17px;line-height:23px;color:#991b1b;width:21px;font-weight:900}.brief-line{font-family:Arial,sans-serif;font-size:15.1px;line-height:24px;font-weight:550;letter-spacing:-.15px;white-space:nowrap;color:#111827}.brief-line strong{font-weight:900;color:#0b0f19}.brief-cite{font-size:12px;font-weight:700;color:#111827}.map-key{font-size:12px;line-height:15px}.map-key b{color:#991b1b}.date-check{padding-top:5px;padding-bottom:5px}.date-check p{color:#111827}footer{color:#111827}
 .brief-number{width:27px}
+${edition.css}
 </style><main>
 <header data-cell="header"><div class="topbar" data-audit><span>THE WORLD IN ONE DAY</span><span>35 STORIES • 7 REGIONS • EVERY ONE DATED FRIDAY 20 NOVEMBER 2026</span></div><div class="masthead"><h1 data-audit>Friday 20 November 2026</h1><div class="edition-box" data-audit>GLOBAL EDITION<br>VOL. XXVI · NO. 324</div></div><p class="deck" data-audit>Bridges under fire. A cyclone makes landfall. AI markets tumble. A world negotiating what comes next.</p></header>
 <section class="kpis">${kpis.map(([value,label,source],i)=>`<div class="kpi" data-cell="kpi-${i}"><strong data-audit>${value}</strong><p data-audit>${label}</p><small data-audit>${source}</small></div>`).join('')}</section>
@@ -134,6 +139,6 @@ html,body{color:#111827}main{grid-template-rows:144px 76px 28px 52px 288px 428px
 <footer data-cell="footer"><span data-audit>LOCAL EVENT DATES · DATA DATED BY FRIDAY RELEASE · FUTURE OUTCOMES EXCLUDED · SOURCES LINKED IN NEWS-DATA.MJS</span><span data-audit>ORIGINAL VECTOR ART / VERIFIED EDITORIAL BRIEF</span></footer>
 </main></html>`;
 writeFileSync(resolve(directory,'front-page.html'), html, 'utf8');
-const audit = { edition:'2026-11-20',policy:datePolicy,storyCount:stories.length,regions:counts,stories,additionalEvidence,timeline,exclusions };
+const audit = { edition:'2026-11-20',design,policy:datePolicy,storyCount:stories.length,regions:counts,stories,additionalEvidence,timeline,exclusions };
 writeFileSync(resolve(directory,'date-audit.json'),JSON.stringify(audit)+'\n');
 console.log(JSON.stringify({generated:'front-page.html',stories:stories.length,regions:counts,illustrations:13,typographicBriefs:22}));

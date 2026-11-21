@@ -19,7 +19,7 @@ try {
   const inspectLayout = ({edge})=>{
     const serialize = r=>({left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height});
     const elements=[...document.querySelectorAll('[data-audit], svg text')];
-    const blocks=elements.map(el=>{
+    const blocks=elements.filter(el=>el.getClientRects().length).map(el=>{
       const range=document.createRange();range.selectNodeContents(el);
       const rects=[...range.getClientRects()].filter(r=>r.width>.5&&r.height>.5);
       const frame=(el.closest('[data-cell]')||el).getBoundingClientRect();
