@@ -20,16 +20,16 @@ function metadata(story) {
   return `<div class="meta" data-audit><span class="region" style="color:${colors[story.region]}">${String(story.id).padStart(2,'0')} &nbsp; ${escape(cardDatelines[story.id-1])}</span>${story.status==='CLAIM'?'<span class="verified claim">CLAIM</span>':''}</div>`;
 }
 const cardBadges = [
-  ['KYIV', 'Official count · Reuters', 'Kyiv’s three bridges hit'],
-  ['CYCLONE AKVAN', 'Weather office · IMD', 'Akvan makes landfall in Odisha'],
-  ['AI SELL-OFF', 'Friday closes · IMF', 'Asian stocks sink on AI fears'],
+  ['KYIV', 'Official count · Reuters', 'Russian strikes hit three Kyiv bridges'],
+  ['CYCLONE AKVAN', 'Weather office · IMD', 'Cyclone Akvan makes landfall in Odisha'],
+  ['AI SELL-OFF', 'Friday closes · IMF', 'AI sell-off sweeps Asian stock markets'],
   ['COP31: NO DEAL', 'Antalya · AP'],
   ['UK–EU DEAL', 'Agreement · EU Council', 'UK–EU trade and youth deal'],
-  ['POLAND: MISSILES', 'Incursion · AP'],
+  ['POLAND: HIT', 'Incursion · AP'],
   ['IRAQ: ARMY IN', 'Deployment · Reuters', 'Iraqi troops enter militia town'],
   ['ITALY: STRIKE', 'La Repubblica', 'Italy’s workers and students strike'],
-  ['NVIDIA: SEC PROBE', 'Sources’ account · Reuters', 'Nvidia faces SEC accounting probe'],
-  ['SEOUL: IMPEACH BID', 'Party policy · SBS', 'Seoul party targets chief justice'],
+  ['NVIDIA: PROBE', 'Sources’ account · Reuters', 'Nvidia faces SEC accounting probe'],
+  ['SEOUL: JUDGE', 'Party policy · SBS', 'Seoul party targets chief justice'],
   ['KENYA: OIL', 'Production drilling · The Star', 'Kenya starts production drilling'],
   ['JAPAN: +2.3%', 'Headline CPI · MIC', 'Japan’s October inflation: 2.3%'],
   ['PHILLIPS: 118', 'Day 2 · AP', 'Phillips hits 118 against India'],
@@ -45,11 +45,12 @@ function cleanCardArt(story) {
     if (story.id === 4 && match.includes('NO DEAL YET')) return match.replace('NO DEAL YET','NO DEAL').replace('font-size="15"','font-size="24"');
     if (story.id === 8 && match.includes('SCIOPERO')) return match;
     if (story.id === 9 && match.includes('>AI<')) return match;
-    if (story.id === 13 && (match.includes('>PHILLIPS<')||match.includes('>118<'))) return match;
+    if (story.id === 13 && match.includes('>118<')) return match;
     return '';
   });
 }
 const cardDetails = {
+  2:'300,000+ sheltered. Winds weaken after landfall; heavy rain remains a threat.',
   4:'Draft omits fossil fuels; climate finance divides talks.',
   5:'Food trade and 100,000 youth places each way; future rollout.',
   6:'Missiles fall during European drills; no injuries reported.',
@@ -110,7 +111,7 @@ function worldMap(){
       shapes+=`<path d="${ring.map((p,i)=>{const [x,y]=point(p);return (i?'L':'M')+x.toFixed(1)+','+y.toFixed(1);}).join('')}Z"/>`;
     }
   }
-  const pins=stories.map(s=>{const [x,y]=point([s.lon,s.lat]);return {id:s.id,region:s.region,x,y,lx:x,ly:y};});
+  const pins=stories.slice(0,13).map(s=>{const [x,y]=point([s.lon,s.lat]);return {id:s.id,region:s.region,x,y,lx:x,ly:y};});
   // Keep pins geographically anchored, separating only their numbered labels.
   for(let pass=0;pass<1000;pass++){
     for(let i=0;i<pins.length;i++)for(let j=i+1;j<pins.length;j++){
@@ -122,9 +123,9 @@ function worldMap(){
   let closest=Infinity;
   for(let i=0;i<pins.length;i++)for(let j=i+1;j<pins.length;j++)closest=Math.min(closest,Math.hypot(pins[i].lx-pins[j].lx,pins[i].ly-pins[j].ly));
   if(closest<24)throw new Error('Map labels collide.');
-  const leaders = pins.map(p=>`<path d="M${p.x.toFixed(1)},${p.y.toFixed(1)}L${p.lx.toFixed(1)},${p.ly.toFixed(1)}" stroke="#f4e7c4" stroke-opacity=".75" stroke-width="1"/><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="1.8" fill="#fff3cc"/>`).join('');
-  const labels=pins.map(p=>`<g class="map-pin" data-story="${p.id}"><circle cx="${p.lx.toFixed(1)}" cy="${p.ly.toFixed(1)}" r="11" fill="${colors[p.region]}" stroke="#fff3cc" stroke-width="1.2"/><text x="${p.lx.toFixed(1)}" y="${(p.ly+4.2).toFixed(1)}" text-anchor="middle" fill="#ffffff" font-family="Arial" font-weight="800" font-size="12">${p.id}</text></g>`).join('');
-  return `<svg viewBox="0 0 590 240" xmlns="http://www.w3.org/2000/svg" aria-label="Geographically anchored world map showing all thirty-five numbered stories"><rect width="590" height="240" fill="#142942"/><g fill="none" stroke="#385069" stroke-width=".8"><path d="M18 105H570M18 37H570M18 173H570M155 9V227M294 9V227M432 9V227"/></g><g fill="#dfd3a4" stroke="#a69e7f" stroke-width=".6">${shapes}</g>${leaders}${labels}</svg>`;
+  const leaders = pins.map(p=>`<path d="M${p.x.toFixed(1)},${p.y.toFixed(1)}L${p.lx.toFixed(1)},${p.ly.toFixed(1)}" stroke="#7f1d1d" stroke-width="1.2"/><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2" fill="#b91c1c"/>`).join('');
+  const labels=pins.map(p=>`<g class="map-pin" data-story="${p.id}"><circle cx="${p.lx.toFixed(1)}" cy="${p.ly.toFixed(1)}" r="11.5" fill="#b91c1c" stroke="#172033" stroke-width="1.2"/><text x="${p.lx.toFixed(1)}" y="${(p.ly+4.2).toFixed(1)}" text-anchor="middle" fill="#ffffff" font-family="Arial" font-weight="800" font-size="12">${p.id}</text></g>`).join('');
+  return `<svg viewBox="0 0 590 240" xmlns="http://www.w3.org/2000/svg" aria-label="Geographically anchored world map showing the thirteen illustrated stories"><rect width="590" height="240" fill="#dbeafe"/><g fill="none" stroke="#b4cce2" stroke-width=".8"><path d="M18 105H570M18 37H570M18 173H570M155 9V227M294 9V227M432 9V227"/></g><g fill="#d6c6a2" stroke="#9d947d" stroke-width=".6">${shapes}</g>${leaders}${labels}</svg>`;
 }
 
 const kpis = [
@@ -162,7 +163,7 @@ ${readFileSync(new URL('./edition.css',import.meta.url),'utf8')}
 <section class="timeline"><div class="timeline-title" data-audit>THE DAY IN UTC</div>${timeline.map((t,i)=>`<div class="tick" data-cell="time-${t.story}"><b data-audit>${t.time}</b><span data-audit>${timelineLabels[i]}</span></div>`).join('')}</section>
 <section class="heroes">${stories.slice(0,3).map(s=>card(s,true)).join('')}</section>
 <section class="small-cards">${stories.slice(3,13).map(s=>card(s)).join('')}</section>
-<section class="bottom"><div class="map-section"><h2 class="section-title" data-audit>WHERE IT HAPPENED</h2><div class="map">${worldMap()}</div><p class="map-note" data-audit>35 numbered stories · Region colours above · Natural Earth / original editorial art</p></div><div class="brief-section"><h2 class="section-title" data-audit>ALSO ON FRIDAY 20 NOVEMBER — 22 MORE STORIES</h2><div class="briefs">${stories.slice(13).map(brief).join('')}</div></div></section>
+<section class="bottom"><div class="map-section"><h2 class="section-title" data-audit>WHERE IT HAPPENED</h2><div class="map">${worldMap()}</div><p class="map-note" data-audit>Pins 1–13: illustrated stories · 14–35: briefs at right · Natural Earth</p></div><div class="brief-section"><h2 class="section-title" data-audit>ALSO ON FRIDAY 20 NOVEMBER — 22 MORE STORIES</h2><div class="briefs">${stories.slice(13).map(brief).join('')}</div></div></section>
 <aside class="date-check" data-cell="date-check"><div class="heading" data-audit>DATE CHECK<small>FRIDAY EVENTS / NEW RELEASES</small></div>${exclusions.map(e=>`<div><h4 data-audit>${e.date} · EXCLUDED</h4><p data-audit>${escape(e.text)}</p></div>`).join('')}</aside>
 <footer data-cell="footer"><span data-audit>LOCAL EVENT DATES · DATA DATED BY FRIDAY RELEASE · FUTURE OUTCOMES EXCLUDED · SOURCES LINKED IN NEWS-DATA.MJS</span><span data-audit>ORIGINAL VECTOR ART / VERIFIED EDITORIAL BRIEF</span></footer>
 </main></html>`;

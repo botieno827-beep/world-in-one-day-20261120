@@ -19,3 +19,16 @@ h1{font-size:100px;line-height:120px;letter-spacing:-3.8px}
 .briefs{grid-template-rows:repeat(11,23px)}.brief{height:23px}
 .brief-number{font-size:15px;line-height:21px;position:relative;top:1.2px}.brief-line{font-size:15px;line-height:21px;top:1.2px}
 .date-check{padding:5px 12px}.date-check h4{margin:0 0 2px}
+
+/* Night edition: strong grouping and larger labels at thumbnail scale. */
+main{grid-template-rows:176px 70px 24px 34px 360px 486px 290px 62px 14px}
+header{margin:0 -32px;padding:0 32px;background:#0e1c34;border-top:0;border-bottom:4px solid #c5a86b;color:#fffaf0}
+header h1{color:#fffaf0}header .topbar{border-bottom-color:#526079}header .topbar span:first-child{color:#ecd49d}
+header .deck{color:#f1e4c5}.hero .art{height:194px}
+.card{border:0;background:transparent}.heroes,.small-cards{gap:12px}
+.copy{padding:8px 0}.small .copy{padding:4px 0}
+.small-cards{grid-template-rows:237px 237px}
+.small p{font-size:16px;line-height:18px}
+.small .art-banner{font-size:30px;line-height:33px;padding:3px 5px;letter-spacing:-.5px;max-width:calc(100% - 14px)}
+.map{border:1px solid #4b5b6b;background:#dbeafe}
+.hero .copy{padding:6px 0}.hero h2{font-size:39px;line-height:40px}.hero p{font-size:21px;line-height:24px}

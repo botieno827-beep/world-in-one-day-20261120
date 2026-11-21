@@ -1,4 +1,5 @@
 // Original deterministic SVG illustrations. These are editorial schematics, not photographs.
+import {kyivPanorama} from './scene-kyiv.mjs';
 const paper = '#f6f1e7';
 const ink = '#0f172a';
 const red = '#b91c1c';
@@ -69,7 +70,7 @@ function marketScene(){
 }
 
 export function artwork(kind){
-  if(kind==='kyiv')return bridgeScene();
+  if(kind==='kyiv')return kyivPanorama();
   if(kind==='cyclone')return cycloneScene();
   if(kind==='markets')return marketScene();
   if(kind==='climate')return svg(circle(108,99,64,'#2e86af')+path('M63 60 88 47l16 16-5 20 28 8 15 28-19 33-21 9-6-34-23-10-18-30Z','#609c68')+path('M135 51 159 69l-7 24-20-7-7-19Z','#89b67d')+path('M48 76q61-25 119 0m-116 47q57 18 115-5M108 35q-32 63 0 128m0-128q32 63 0 128','none','#abd0d1',1.3)+rect(221,59,19,73,paper,'rx="9" stroke="#b84335" stroke-width="5"')+circle(230.5,139,18,'#b84335')+rect(227,91,7,48,'#b84335')+line('M247 74h13m-13 20h13m-13 20h13','#7a5149',2)+circle(370,105,49,paper,'stroke="#203c4d" stroke-width="5"')+Array.from({length:12},(_,i)=>{const a=i*Math.PI/6;return line(`M${370+Math.cos(a)*40} ${105+Math.sin(a)*40}L${370+Math.cos(a)*44} ${105+Math.sin(a)*44}`,'#203c4d',1.7);}).join('')+line('M370 73v32l22 15','#b91c1c',5)+circle(370,105,4,'#203c4d'));

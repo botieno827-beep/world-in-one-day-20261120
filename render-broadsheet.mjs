@@ -43,7 +43,7 @@ try {
     }
     const minimumBodyText=Math.min(...[...document.querySelectorAll('.card p,.brief-line')].map(el=>parseFloat(getComputedStyle(el).fontSize)));
     const structure={cardCount:document.querySelectorAll('.card').length,briefCount:document.querySelectorAll('.brief').length,bannerCount:document.querySelectorAll('.art-banner').length,captionCount:document.querySelectorAll('.art-caption').length,mapPinCount:document.querySelectorAll('.map-pin').length,timelineEventCount:document.querySelectorAll('.tick').length,regionCount:document.querySelectorAll('.regions .pill').length,dateCheckCount:document.querySelectorAll('.date-check').length};
-    const required={cardCount:13,briefCount:22,bannerCount:13,captionCount:13,mapPinCount:35,timelineEventCount:6,regionCount:7,dateCheckCount:1};
+    const required={cardCount:13,briefCount:22,bannerCount:13,captionCount:13,mapPinCount:13,timelineEventCount:6,regionCount:7,dateCheckCount:1};
     for(const [key,value] of Object.entries(required))if(structure[key]!==value)failures.push({kind:'missing-content',key,expected:value,actual:structure[key]});
     const numberedStories=[...document.querySelectorAll('.card,.brief')].map(el=>Number(el.dataset.cell.replace(/^(card|brief)-/,'')));
     if(JSON.stringify(numberedStories)!==JSON.stringify(Array.from({length:35},(_,i)=>i+1)))failures.push({kind:'missing-story-number'});
