@@ -1,17 +1,42 @@
-# The Daily Brief · 20 November 2026
+# The World in One Day — Friday 20 November 2026
 
-A single-page world newspaper with seven stories from Friday, 20 November 2026. The original canvas illustration connects a bridge over the Dnipro with the Mediterranean coast at Antalya.
+An original 35-story broadsheet across seven regions. Each story has an editorial vector illustration, a named source, a date basis and either a confirmed-report or attributed-claim label. The opening 13 cards are located on a numbered Natural Earth world map.
 
-Run `node main.ts` with Node 22 or later to write `/output/entry.png`. Set `MAKEFUN_OUTPUT_DIR` to use a different output directory. The program emits the committed 1024 × 1024 PNG and needs no network access or dependencies.
+![The World in One Day](front-page.png)
 
-`front-page.html` and `illustration.js` are the editable artwork. Render the page in Chromium at 1024 × 1024 with the device scale set to 1.
+## Images and entrypoint
 
-## Reporting
+- `front-page.png`: the 1600 × 1600 master.
+- `submission.png`: the 1024 × 1024 contest image, below 1 MiB.
+- `main.ts`: Node 22 entrypoint. With no dependencies or network, writes the submission bytes to `/output/entry.png`.
 
-- [Reuters reporting on the Dnipro bridge strikes](https://www.aftenposten.no/verden/i/lMALdk/morgenbrief-20-november) and [AP reporting on Poland](https://apnews.com/article/961f5a5b381dc7555c7bedfdd20581d8).
-- [AP on Iran diplomacy](https://apnews.com/article/8fd6dcd6dc4a1a77437cedc4567fbee8) and [Saudi–Houthi exchanges](https://apnews.com/article/16c39c487a23b53b73c5eabb7f0fd57a).
-- [AP on the COP31 draft](https://apnews.com/article/a683c5c87a7ee64caf4e9257948b6e40) and [The Guardian on the funding dispute](https://www.theguardian.com/environment/2026/nov/20/cop31-talks-overtime-fossil-fuels-vanish-from-draft-deal).
-- [AP on Myanmar's rejection of the verdict](https://apnews.com/article/c76dcb3f97c1077262f87e0cba01bb78) and [Rohingya refugees' response](https://apnews.com/article/995389b9d83d9c7813dcfd269f054e39).
-- [Sudan Tribune on the fighting in Blue Nile](https://sudantribune.com/article/321467) and [the Sudanese Alliance for Rights on displacement](https://allianceforrights.org/en/statements/sar-raises-alarm-over-mass-displacement-of-civilians-following-rsf-takeover-of-bau-locality-in-blue-nile-state).
-- [European Council on the Brussels summit](https://www.consilium.europa.eu/en/meetings/international-summit/2026/11/20/).
-- [Anthropic on the close of its IPO](https://www.anthropic.com/news/ipo-close) and [CBS News on the first day of trading](https://www.cbsnews.com/news/anthropic-ipo-nasdaq-debut-claude-ai/).
+For a local run, set `MAKEFUN_OUTPUT_DIR` to a writable folder, then run `node main.ts`. The high-resolution master is deliberately separate because the contest caps the output image at 1024 pixels per side.
+
+## Regenerate
+
+Install Node and Microsoft Edge, then run:
+
+```sh
+npm install
+npm run build
+```
+
+For another Chromium installation, set `CHROMIUM_EXECUTABLE` to its absolute executable path. The build uses headless Chromium and checks actual text rectangles, container boundaries, SVG labels, map-label separation, story counts, image dimensions, byte size and two repeated entrypoint runs. It stops on text collisions or clipping instead of silently cropping text.
+
+`build-broadsheet.mjs` creates the HTML from `news-data.mjs` and the original SVG scenes in `broadsheet-art.mjs`. `render-broadsheet.mjs` creates both PNGs and the machine-readable layout report. Only rendering uses Playwright; the judged entrypoint uses the Node standard library alone.
+
+## Date and source policy
+
+`news-data.mjs` links a named reporting source for every story and records whether the date belongs to the event, a data release or a first report. `date-audit.json` contains the full source ledger, additional evidence, timeline basis and exclusions. Local event dates govern the edition. October inflation and quarterly crime figures are identified as data released on Friday rather than events measured on that day.
+
+The date-check strip excludes Thursday's Anthropic stock-market debut, the Myanmar ICJ judgment, the APEC three-leader summit and the US cyber-chief departure. It also excludes Saturday's BepiColombo orbit insertion and later cricket scores. The Friday close of Anthropic's offering is a separate event and was omitted to avoid ambiguity.
+
+The UK–EU figure means 100,000 future youth places in each direction under the agreement; it is not 100,000 visas issued on Friday. Nvidia's accounting investigation is attributed to Reuters sources, with no finding asserted and no unverified percentage loss printed. Akvan's local landfall time is approximate; the UTC timeline shows the reported crossing interval.
+
+Reporting includes AP, Reuters, IMD as relayed by Indian reporting, the European Council, IMF's November 20 Global Markets Monitor, SBS, Chosun, The Star, Sudan Tribune, Africanews, UNICEF, WHO and the Federal Reserve. CONFIRMED means the stated event or report is documented, not that every allegation within it is independently proven. CLAIM preserves the claimant's attribution.
+
+## Map and license
+
+`world-land.json` is public-domain Natural Earth 1:110m land geometry, downloaded from the Natural Earth project's `nvkelso/natural-earth-vector` repository. Numbered labels can move for readability; leader lines retain their true longitude and latitude anchors. All drawings are editorial schematics, not news photographs or assertions of exact physical damage geometry.
+
+Code and original illustrations: MIT. Built for the [make.fun November 20 news-image bounty](https://make.fun/bounty/news-image-20261120).

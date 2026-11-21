@@ -1,0 +1,14 @@
+{
+  "name": "world-in-one-day-20261120",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "node render-broadsheet.mjs",
+    "entry": "node main.ts"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.56.0"
+  }
+}
