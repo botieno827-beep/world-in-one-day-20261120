@@ -9,9 +9,7 @@ const here = fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
 const playwrightPath = require.resolve('playwright-core', { paths: [here, resolve(here,'..','tools')] });
 const { chromium } = require(playwrightPath);
-const design=JSON.parse(readFileSync(resolve(here,'design-config.json'),'utf8'));
-const builder=design.edition==='regional-focus'?'build-regional.mjs':'build-broadsheet.mjs';
-execFileSync(process.execPath,[resolve(here,builder)],{cwd:here,stdio:'inherit'});
+execFileSync(process.execPath,[resolve(here,'build-broadsheet.mjs')],{cwd:here,stdio:'inherit'});
 const executablePath = process.env.CHROMIUM_EXECUTABLE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const browser = await chromium.launch({executablePath,headless:true});
 try {
@@ -21,7 +19,7 @@ try {
   const inspectLayout = ({edge})=>{
     const serialize = r=>({left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height});
     const elements=[...document.querySelectorAll('[data-audit], svg text')];
-    const blocks=elements.filter(el=>el.getClientRects().length).map(el=>{
+    const blocks=elements.map(el=>{
       const range=document.createRange();range.selectNodeContents(el);
       const rects=[...range.getClientRects()].filter(r=>r.width>.5&&r.height>.5);
       const frame=(el.closest('[data-cell]')||el).getBoundingClientRect();

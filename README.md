@@ -1,6 +1,6 @@
 # The World in One Day — Friday 20 November 2026
 
-An original world-news image built from a 35-story verified research ledger across seven regions. The design configuration selects either the detailed broadsheet or a more selective regional layout. The regional design presents 13 selected headlines in seven larger illustrated panels to improve thumbnail readability. Every selected event retains its source and date basis in the full ledger.
+An original 35-story broadsheet across seven regions: 13 illustrated cards and 22 typography-led briefs. The illustrated cards have bold headline banners, source captions and a confirmed-report or attributed-claim label. Every story retains its source and date basis in the source ledger. The opening 13 cards are located on a numbered Natural Earth world map.
 
 ![The World in One Day](front-page.png)
 
@@ -25,8 +25,6 @@ npm run build
 For another Chromium installation, set `CHROMIUM_EXECUTABLE` to its absolute executable path. The build checks actual text rectangles, container boundaries, SVG labels, map-label separation, story counts, image dimensions, byte size and two repeated entrypoint runs. These checks run on both the 1600px master and the native 1024px CSS layout. The contest image is rendered with deviceScaleFactor 2, then downsampled once with Lanczos. The build stops on text collisions or clipping instead of silently cropping text.
 
 `build-broadsheet.mjs` creates the HTML from `news-data.mjs` and the original SVG scenes in `broadsheet-art.mjs`. `render-broadsheet.mjs` creates both PNGs and the machine-readable layout report. Only rendering uses Playwright and Pillow; the judged entrypoint uses the Node standard library alone.
-
-`design-config.json` selects the current readability treatment in `readability-editions.mjs`. The shortened display copy retains the original facts, including claim attribution and future rollout qualifications; the complete source record remains in `news-data.mjs`.
 
 ## Date and source policy
 
