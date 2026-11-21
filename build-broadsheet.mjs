@@ -23,16 +23,16 @@ const cardBadges = [
   ['KYIV', 'Official count · Reuters', 'Russian strikes hit three Kyiv bridges'],
   ['CYCLONE AKVAN', 'Weather office · IMD', 'Cyclone Akvan makes landfall in Odisha'],
   ['AI SELL-OFF', 'Friday closes · IMF', 'AI sell-off sweeps Asian stock markets'],
-  ['COP31: NO DEAL', 'Antalya · AP'],
-  ['UK–EU DEAL', 'Agreement · EU Council', 'UK–EU trade and youth deal'],
+  ['COP31: NO DEAL', 'Antalya · AP', 'COP31 goes into overtime'],
+  ['UK–EU DEAL', 'Agreement · EU Council', 'UK and EU seal trade reset'],
   ['POLAND: HIT', 'Incursion · AP'],
-  ['IRAQ: ARMY IN', 'Deployment · Reuters', 'Iraqi troops enter militia town'],
-  ['ITALY: STRIKE', 'La Repubblica', 'Italy’s workers and students strike'],
-  ['NVIDIA: PROBE', 'Sources’ account · Reuters', 'Nvidia faces SEC accounting probe'],
-  ['SEOUL: JUDGE', 'Party policy · SBS', 'Seoul party targets chief justice'],
-  ['KENYA: OIL', 'Production drilling · The Star', 'Kenya starts production drilling'],
-  ['JAPAN: +2.3%', 'Headline CPI · MIC', 'Japan’s October inflation: 2.3%'],
-  ['PHILLIPS: 118', 'Day 2 · AP', 'Phillips hits 118 against India'],
+  ['IRAQ: ARMY IN', 'Deployment · Reuters', 'Iraqi army enters militia town'],
+  ['ITALY: STRIKE', 'La Repubblica', 'Italy holds general strike'],
+  ['NVIDIA: PROBE', 'Sources’ account · Reuters', 'SEC examines Nvidia accounts'],
+  ['SEOUL: JUDGE', 'Party policy · SBS', 'Seoul party targets top judge'],
+  ['KENYA: OIL', 'Production drilling · The Star', 'Kenya starts oil drilling'],
+  ['JAPAN: +2.3%', 'Headline CPI · MIC', 'Japan inflation hits 2.3%'],
+  ['PHILLIPS: 118', 'Day 2 · AP', 'Phillips hits 118 vs India'],
 ];
 function cleanCardArt(story) {
   // Keep the market data and restore the climate sign; HTML owns other labels.
@@ -51,16 +51,16 @@ function cleanCardArt(story) {
 }
 const cardDetails = {
   2:'300,000+ sheltered. Winds weaken after landfall; heavy rain remains a threat.',
-  4:'Draft omits fossil fuels; climate finance divides talks.',
-  5:'Food trade and 100,000 youth places each way; future rollout.',
+  4:'Fossil fuels absent from draft; finance divides delegates.',
+  5:'Food trade; 100,000 future youth places each way.',
   6:'Missiles fall during European drills; no injuries reported.',
   7:'Iraqi forces enter Jurf al-Sakhar after a militia deal.',
   8:'Workers and students march over living costs and cuts.',
-  9:'Reuters sources: SEC examines accounting; no finding announced.',
-  10:'Party adopts impeachment bid; the judge remains in office.',
+  9:'Reuters sources report accounting inquiry; no finding announced.',
+  10:'Party adopts impeachment bid; judge remains in office.',
   11:'Amosing production well spudded; oil output is a future target.',
-  12:'Friday data: headline CPI 2.3%; core CPI 2.2%.',
-  13:'Phillips makes 118; New Zealand is 317–6 at Friday lunch.',
+  12:'October headline CPI 2.3%, core 2.2%; Friday release.',
+  13:'New Zealand 317–6 at Friday lunch; second Test hundred.',
 };
 function card(story, hero = false) {
   const [banner,caption,headline] = cardBadges[story.id-1];
