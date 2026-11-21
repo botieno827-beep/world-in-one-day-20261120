@@ -1,6 +1,6 @@
 # The World in One Day — Friday 20 November 2026
 
-An original 35-story broadsheet across seven regions: 13 illustrated cards and 22 typography-led briefs. The illustrated cards have bold headline banners, source captions and a confirmed-report or attributed-claim label. Every story retains its source and date basis in the source ledger. The opening 13 cards are located on a numbered Natural Earth world map.
+An original 35-story broadsheet across seven regions: 13 illustrated cards and 22 typography-led briefs. The illustrated cards have bold headline banners, source captions and compact numbered datelines; disputed claims retain an explicit CLAIM label. Every story retains its source and date basis in the source ledger. All 35 stories are located on a numbered Natural Earth world map. The six-event UTC timeline, six headline indicators, regional counts and Date Check footer remain part of the complete edition.
 
 ![The World in One Day](front-page.png)
 
@@ -22,7 +22,7 @@ python -m pip install Pillow
 npm run build
 ```
 
-For another Chromium installation, set `CHROMIUM_EXECUTABLE` to its absolute executable path. The build checks actual text rectangles, container boundaries, SVG labels, map-label separation, story counts, image dimensions, byte size and two repeated entrypoint runs. These checks run on both the 1600px master and the native 1024px CSS layout. The contest image is rendered with deviceScaleFactor 2, then downsampled once with Lanczos. The build stops on text collisions or clipping instead of silently cropping text.
+For another Chromium installation, set `CHROMIUM_EXECUTABLE` to its absolute executable path. The build checks actual text rectangles, card and illustration boundaries, SVG labels, map-label separation, all 35 story numbers, 13 illustrated cards, 22 briefs, 35 map pins, six timeline events, seven regional pills and the Date Check footer. It also validates image dimensions, byte size and two repeated entrypoint runs. These checks run on both the 1600px master and the native 1024px CSS layout. The contest image is rendered with deviceScaleFactor 2, then downsampled once with Lanczos. The build stops on text collisions or clipping instead of silently cropping text.
 
 `build-broadsheet.mjs` creates the HTML from `news-data.mjs` and the original SVG scenes in `broadsheet-art.mjs`. `render-broadsheet.mjs` creates both PNGs and the machine-readable layout report. Only rendering uses Playwright and Pillow; the judged entrypoint uses the Node standard library alone.
 

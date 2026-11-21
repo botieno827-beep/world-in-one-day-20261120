@@ -22,7 +22,7 @@ try {
     const blocks=elements.map(el=>{
       const range=document.createRange();range.selectNodeContents(el);
       const rects=[...range.getClientRects()].filter(r=>r.width>.5&&r.height>.5);
-      const frame=(el.closest('[data-cell]')||el).getBoundingClientRect();
+      const frame=(el.closest('.art')||el.closest('.map')||el.closest('[data-cell]')||el).getBoundingClientRect();
       return {el,text:el.textContent.trim(),rects,frame,box:el.getBoundingClientRect()};
     });
     const failures=[];
@@ -42,7 +42,12 @@ try {
       }
     }
     const minimumBodyText=Math.min(...[...document.querySelectorAll('.card p,.brief-line')].map(el=>parseFloat(getComputedStyle(el).fontSize)));
-    return {checkedTextBlocks:blocks.length,failures,cardCount:document.querySelectorAll('.card').length,briefCount:document.querySelectorAll('.brief').length,bannerCount:document.querySelectorAll('.art-banner').length,captionCount:document.querySelectorAll('.art-caption').length,briefIconCount:document.querySelectorAll('.brief svg').length,svgCount:document.querySelectorAll('svg').length,page:{width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight},minimumBodyText};
+    const structure={cardCount:document.querySelectorAll('.card').length,briefCount:document.querySelectorAll('.brief').length,bannerCount:document.querySelectorAll('.art-banner').length,captionCount:document.querySelectorAll('.art-caption').length,mapPinCount:document.querySelectorAll('.map-pin').length,timelineEventCount:document.querySelectorAll('.tick').length,regionCount:document.querySelectorAll('.regions .pill').length,dateCheckCount:document.querySelectorAll('.date-check').length};
+    const required={cardCount:13,briefCount:22,bannerCount:13,captionCount:13,mapPinCount:35,timelineEventCount:6,regionCount:7,dateCheckCount:1};
+    for(const [key,value] of Object.entries(required))if(structure[key]!==value)failures.push({kind:'missing-content',key,expected:value,actual:structure[key]});
+    const numberedStories=[...document.querySelectorAll('.card,.brief')].map(el=>Number(el.dataset.cell.replace(/^(card|brief)-/,'')));
+    if(JSON.stringify(numberedStories)!==JSON.stringify(Array.from({length:35},(_,i)=>i+1)))failures.push({kind:'missing-story-number'});
+    return {checkedTextBlocks:blocks.length,failures,...structure,briefIconCount:document.querySelectorAll('.brief svg').length,svgCount:document.querySelectorAll('svg').length,page:{width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight},minimumBodyText};
   };
   const audit = await page.evaluate(inspectLayout,{edge:1600});
   writeFileSync(resolve(here,'layout-audit.json'),JSON.stringify(audit)+'\n');
