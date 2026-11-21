@@ -32,13 +32,3 @@ header .deck{color:#f1e4c5}.hero .art{height:194px}
 .small .art-banner{font-size:30px;line-height:33px;padding:3px 5px;letter-spacing:-.5px;max-width:calc(100% - 14px)}
 .map{border:1px solid #4b5b6b;background:#dbeafe}
 .hero .copy{padding:6px 0}.hero h2{font-size:39px;line-height:40px}.hero p{font-size:21px;line-height:24px}
-
-/* Final readability pass: headlines first, supporting details second. */
-main{grid-template-rows:176px 64px 24px 31px 350px 472px 323px 62px 14px}
-.hero .art{height:184px}
-.small-cards{grid-template-rows:230px 230px}.small .art{height:114px}
-.small .copy{padding:3px 0}.small h2{font-size:29px;line-height:29px;margin:2px 0;letter-spacing:-.8px}
-.small p{font-size:15.4px;line-height:17px}
-.briefs{grid-template-rows:repeat(11,26px)}.brief{height:26px}
-.brief-number{font-size:17px;line-height:23px}.brief-line{font-size:17px;line-height:23px;letter-spacing:-.35px;top:1.5px}
-.brief-cite{font-size:12.5px}.map{height:273px}
