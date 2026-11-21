@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=1024">
+<title>World News · 20 November 2026</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1024px; height: 1024px; }
+  body { color: #131d2b; background: #f5efdf; }
+  main { padding: 25px 36px 23px; }
+  .edition { display: flex; justify-content: space-between; align-items: center; padding: 0 0 10px; border-bottom: 2px solid #172233; }
+  .edition, .tag, footer { font: 700 18px/1.05 "Arial", sans-serif; letter-spacing: .10em; }
+  .edition .date { letter-spacing: .045em; }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; }
+  h1 { font-size: 103px; line-height: .94; letter-spacing: -.066em; margin: 6px 0 14px -5px; }
+  .hero { display: block; position: relative; height: 284px; margin: 0; overflow: hidden; background: #243b54; }
+  .hero canvas { width: 100%; height: 100%; display: block; }
+  .hero figcaption { position: absolute; right: 12px; bottom: 10px; padding: 5px 8px; background: #131d2b; color: #fff4d4; font: 700 12px/1 Arial, sans-serif; letter-spacing: .12em; }
+  .lead { padding: 13px 0 12px; border-bottom: 3px solid #172233; }
+  .tag { display: block; color: #843b25; font-size: 16px; }
+  h2 { font-size: 52px; line-height: 1.04; letter-spacing: -.05em; margin: 4px 0 3px; }
+  p { font: 20px/1.21 "Arial", sans-serif; color: #283645; }
+  .lead p { font-size: 23px; }
+  .stories { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(184px, auto); }
+  article { padding: 15px 13px 13px 0; min-width: 0; }
+  article:nth-child(3n+2), article:nth-child(3n+3) { padding-left: 13px; border-left: 1px solid #9b9385; }
+  article:nth-child(3n) { padding-right: 0; }
+  article:nth-child(n+4) { border-top: 1px solid #9b9385; }
+  h3 { font-size: 31px; line-height: 1.02; letter-spacing: -.038em; margin: 5px 0 5px; }
+  footer { font-size: 13px; letter-spacing: .07em; border-top: 2px solid #172233; padding-top: 8px; }
+</style>
+<main>
+  <header>
+    <div class="edition"><span>THE DAILY BRIEF</span><span class="date">FRIDAY · 20 NOVEMBER 2026</span></div>
+    <h1>World News</h1>
+  </header>
+  <figure class="hero">
+    <canvas id="bridge" width="952" height="284" role="img" aria-label="An editorial illustration of a Kyiv bridge and the Mediterranean coast at Antalya"></canvas>
+    <figcaption>EDITORIAL ILLUSTRATION</figcaption>
+  </figure>
+  <section class="lead" aria-labelledby="lead-headline">
+    <span class="tag">UKRAINE &amp; POLAND</span>
+    <h2 id="lead-headline">Russian strikes hit three Kyiv bridges</h2>
+    <p>The overnight barrage hit transport links. Russian missiles also came down in Poland.</p>
+  </section>
+  <section class="stories" aria-label="Around the world">
+    <article>
+      <span class="tag">MIDDLE EAST</span>
+      <h3>Trump sees no acceptable Iran deal</h3>
+      <p>Saudi Arabia and Yemen's Houthis exchange fire.</p>
+    </article>
+    <article>
+      <span class="tag">CLIMATE · ANTALYA</span>
+      <h3>COP31 goes into overtime</h3>
+      <p>African nations press for finance. The draft leaves out fossil fuels.</p>
+    </article>
+    <article>
+      <span class="tag">SOUTHEAST ASIA</span>
+      <h3>Myanmar rejects genocide ruling</h3>
+      <p>Rohingya refugees in Bangladesh welcome the UN court's verdict.</p>
+    </article>
+    <article>
+      <span class="tag">AFRICA · SUDAN</span>
+      <h3>Fighting uproots Blue Nile families</h3>
+      <p>Civilians flee as the RSF and allies claim new gains.</p>
+    </article>
+    <article>
+      <span class="tag">EUROPE · BRUSSELS</span>
+      <h3>UK and EU agree on trade and travel</h3>
+      <p>Deals ease food trade and open a route for young people to live abroad.</p>
+    </article>
+    <article>
+      <span class="tag">US MARKETS</span>
+      <h3>Anthropic closes record IPO</h3>
+      <p>The AI developer closes the offering at $83 a share, a day after its Nasdaq debut.</p>
+    </article>
+  </section>
+  <footer>REPORTING · AP / BBC / REUTERS / SUDAN TRIBUNE · EU COUNCIL / ANTHROPIC</footer>
+</main>
+<script src="illustration.js"></script>
+</html>
